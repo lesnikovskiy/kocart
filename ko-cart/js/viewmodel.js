@@ -103,6 +103,17 @@ var vm = (function() {
 	var hideDebug = function() {
 		debug(false);	
 	};
+	var allCallbackSuccess = function(response) {
+		catalog([]);
+		response.data.forEach(function(item) {
+			catalog.push(Product(item.id, item.name, item.price, item.stock));
+		});
+		filteredCatalog(catalog());
+		ko.applyBindings(vm);
+	};
+	var activate = function() {
+		ProductResource.all().done(allCallbackSuccess);
+	};
 	
  	return {
 		debug: debug,
@@ -123,11 +134,12 @@ var vm = (function() {
 		visibleCatalog: visibleCatalog,
 		visibleCart: visibleCart,
 		showDebug: showDebug,
-		hideDebug: hideDebug
+		hideDebug: hideDebug,
+		activate: activate
 	};
 })();
 
 infuser.defaults.templateSuffix = ".html";
 infuser.defaults.templateUrl = "views";
 
-ko.applyBindings(vm);
+vm.activate();
