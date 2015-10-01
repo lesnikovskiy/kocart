@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>KO Shopping Cart</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/skins/all.css" />
+	<link rel="stylesheet" type="text/css" href="css/styles.css" />
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row" data-bind="if: visibleCatalog">
+			<div class="col-xs-12" data-bind="template: {name: 'header'}"></div>
+			<div class="col-xs-6" data-bind="template: {name: 'catalog'}"></div>
+			<div class="col-xs-6" data-bind="if: visibleCart">
+				<div class="well" data-bind="template: {name: 'cart'}"></div>
+			</div>
+		</div>
+		<div class="row" data-bind="ifnot: visibleCatalog">
+			<div data-bind="template: {name: 'order'}"></div>
+		</div>
+		<div data-bind="template: {name: 'add-to-catalog-modal'}"></div>
+		<div data-bind="template: {name: 'finish-order-modal'}"></div>
+		<pre class="well well-lg" data-bind="toJSON: $root"></pre>
+	</div>
+	
+	<script type="text/javascript" src="js/vendors/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="js/vendors/icheck.min.js"></script>	
+	<script type="text/javascript" src="js/vendors/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/vendors/knockout-3.3.0.js"></script>
+	<script type="text/javascript" src="js/vendors/koExternalTemplateEngine_all.min.js"></script>
+	<script type="text/javascript" src="js/custom/koBindings.js"></script>
+	<script type="text/javascript" src="js/custom/component.js"></script>
+	<script type="text/javascript" src="js/models/product.js"></script>
+	<script type="text/javascript" src="js/models/CartProduct.js"></script>
+	<script type="text/javascript" src="js/viewmodel.js"></script>
+</body>
+</html>
