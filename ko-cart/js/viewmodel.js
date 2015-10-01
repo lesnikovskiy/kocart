@@ -1,4 +1,5 @@
 var vm = (function() {
+	var debug = ko.observable(false);
 	var catalog = ko.observableArray([
 		Product(1, 'T-Shirt', 10.00, 22),
 		Product(2, 'Trousers', 20.00, 10),
@@ -9,6 +10,7 @@ var vm = (function() {
 	var searchTerm = ko.observable('');
 	var visibleCatalog = ko.observable(true);
 	var visibleCart = ko.observable(false);
+	var showSearchBar = ko.observable(true);
 	
 	var filteredCatalog = ko.computed(function() {
 		if (!catalog()) {
@@ -95,12 +97,20 @@ var vm = (function() {
 		showCatalog();
 		$('#finishOrderModal').modal('show');
 	};
+	var showDebug = function() {
+		debug(true);	
+	};
+	var hideDebug = function() {
+		debug(false);	
+	};
 	
  	return {
+		debug: debug,
 		searchTerm: searchTerm,
 		catalog: filteredCatalog,
 		cart: cart,
 		cartHasProducts: cartHasProducts,
+		showSearchBar: showSearchBar,
 		totalItems: totalItems,
 		grandTotal: grandTotal,		
 		newProduct: newProduct,
@@ -111,7 +121,9 @@ var vm = (function() {
 		showCatalog: showCatalog,
 		finishOrder: finishOrder,
 		visibleCatalog: visibleCatalog,
-		visibleCart: visibleCart
+		visibleCart: visibleCart,
+		showDebug: showDebug,
+		hideDebug: hideDebug
 	};
 })();
 

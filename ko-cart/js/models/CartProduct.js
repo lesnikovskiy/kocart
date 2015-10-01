@@ -26,7 +26,7 @@ var CartProduct = function(product, units) {
 		}
 		_units(u-1);
 		_product.stock(++_stock);
-	};
+	};	
 	
 	return {
 		product: _product,

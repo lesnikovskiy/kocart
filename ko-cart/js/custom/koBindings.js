@@ -39,3 +39,21 @@ ko.bindingHandlers.hidden = {
 		});
 	}	
 };
+
+ko.bindingHandlers.icheck = {
+	init: function(element, valueAccessor, allBindingsAccessor) {
+		var checkedBinding = allBindingsAccessor().checked;
+		$(element).iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			increaseArea: '10%'
+		});
+		$(element).on('ifChanged', function(event) {
+			checkedBinding(event.target.checked);
+		});
+	},
+	update: function(element, valueAccessor, allBindingsAccessor) {
+		var checkedBinding = allBindingsAccessor().checked;
+		var status = checkedBinding() ? 'check' : 'uncheck';
+		$(element).iCheck(status);
+	}	
+};

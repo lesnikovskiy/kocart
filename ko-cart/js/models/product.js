@@ -11,11 +11,17 @@ var Product = function(id,name,price,stock) {
 		return (_stock() < 5);
 	})
 	
+	var decreaseStock = function(num) {
+		var stock = _stock() - num;
+		_stock(stock <= 0 ? 0 : stock);	
+	};
+	
 	return {
 		id: _id,
 		name: _name,
 		price: _price,
 		stock: _stock,
-		hasStock: _hasStock
+		hasStock: _hasStock,
+		decreaseStock: decreaseStock
 	};
 };
