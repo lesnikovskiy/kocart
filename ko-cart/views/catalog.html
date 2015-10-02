@@ -3,7 +3,8 @@
 		<i class="glyphicon glyphicon-search"></i>
 		Search
 	</span>
-	<input type="text" class="form-control" data-bind="textInput: searchTerm" />
+	<input type="text" class="form-control" placeholder="Press enter to search..." 
+		data-bind="textInput: searchTerm, executeOnEnter: filterCatalog" />
 </div>
 <table class="table">
 	<thead>
@@ -16,7 +17,9 @@
 	</thead>
 	<tbody data-bind="foreach: catalog">
 		<tr data-bind="css: hasStock">
-			<td data-bind="text: name"></td>
+			<td>
+				<a data-bind="text: name, click: $parent.showDescription" href></a>
+			</td>
 			<td data-bind="currency: price, symbol: '€'"></td>
 			<td data-bind="text: stock"></td>
 			<td>

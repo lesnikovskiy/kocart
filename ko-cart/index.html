@@ -9,7 +9,14 @@
 	<link rel="stylesheet" type="text/css" href="css/styles.css" />
 </head>
 <body>
-	<div class="container-fluid">
+	<div class="container-fluid" data-bind="if: loading">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1>Initializing Catalog <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span></h1>	
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid" data-bind="visible: true" style="display: none">
 		<div class="row" data-bind="if: visibleCatalog">
 			<div class="col-xs-12" data-bind="template: {name: 'header'}"></div>
 			<div class="col-xs-6" data-bind="template: {name: 'catalog'}"></div>
@@ -32,18 +39,19 @@
 	
 	<script type="text/javascript" src="js/vendors/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript" src="js/vendors/jquery.mockjax.min.js"></script>
-	<script type="text/javascript" src="js/vendors/jquery.mockjson.js"></script>
-	<script type="text/javascript" src="js/mocks/product.js"></script>
+	<script type="text/javascript" src="js/vendors/jquery.mockjson.js"></script>	
 	<script type="text/javascript" src="js/vendors/icheck.min.js"></script>	
 	<script type="text/javascript" src="js/vendors/bootstrap.min.js"></script>
-	<script type="text/javascript" src="js/vendors/knockout-3.3.0.js"></script>
+	<script type="text/javascript" src="js/vendors/knockout-3.3.0.debug.js"></script>
 	<script type="text/javascript" src="js/vendors/koExternalTemplateEngine_all.min.js"></script>
 	<script type="text/javascript" src="js/custom/koBindings.js"></script>
 	<script type="text/javascript" src="js/custom/component.js"></script>
 	<script type="text/javascript" src="js/models/product.js"></script>
+	<script type="text/javascript" src="js/mocks/product.js"></script>
 	<script type="text/javascript" src="js/models/CartProduct.js"></script>
-	<script type="text/javascript" src="js/services/ProductResource.js"></script>
-	<script type="text/javascript" src="js/services/OrderResource.js"></script>
+	<script type="text/javascript" src="js/resources/ProductResource.js"></script>
+	<script type="text/javascript" src="js/resources/OrderResource.js"></script>
+	<script type="text/javascript" src="js/cart/events.js"></script>
 	<script type="text/javascript" src="js/viewmodel.js"></script>
 </body>
 </html>

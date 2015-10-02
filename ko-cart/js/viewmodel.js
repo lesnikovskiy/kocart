@@ -1,4 +1,5 @@
 var vm = (function() {
+	var loading = ko.observable(false);
 	var debug = ko.observable(false);
 	var catalog = ko.observableArray([
 		Product(1, 'T-Shirt', 10.00, 22),
@@ -7,28 +8,32 @@ var vm = (function() {
 		Product(4, 'Shorts', 5.00, 10)
 	]);
 	var cart = ko.observableArray();
+	var filteredCatalog = ko.observableArray(catalog());
 	var searchTerm = ko.observable('');
 	var visibleCatalog = ko.observable(true);
 	var visibleCart = ko.observable(false);
 	var showSearchBar = ko.observable(true);
 	
-	var filteredCatalog = ko.computed(function() {
+	var filterCatalog = function() {
 		if (!catalog()) {
-			return [];
-		}
+			filteredCatalog([]);
+		}	
 		
 		var filter = searchTerm().toLowerCase();
 		if (!filter) {
-			return catalog();
+			filteredCatalog(catalog());
 		}
 		
 		var filtered = ko.utils.arrayFilter(catalog(), function(item) {
-			var strProp = ko.unwrap(item['name']).toLocaleLowerCase();		
-			return (strProp.indexOf(filter) > -1)
+			var strProp = ko.unwrap(item['name']).toLocaleLowerCase();
+			if (strProp && (strProp.indexOf(filter) !== -1)) {
+				return true;
+			}		
+			return false;
 		});
 		
-		return filtered;
-	});
+		filteredCatalog(filtered);
+	};
 	var cartHasProducts = ko.computed(function() {
 		return (cart().length > 0)
 	});
@@ -49,17 +54,16 @@ var vm = (function() {
 		return total;
 	});
 		
-	var newProduct = Product('', '', '', '');	
-	var clearNewProduct = function() {
-		newProduct.name('');
-		newProduct.price('');
-		newProduct.stock('');
-	};
-	var addProduct = function(context) {
+	var newProduct = ko.observable(Product('', '', '', ''));
+	var addProduct = function(data) {
 		var id = new Date().valueOf();
-		var newProduct = Product(id, context.name(), context.price(), context.stock());
-		catalog.push(newProduct);
-		clearNewProduct();
+		var product = Product(id, data.name(), data.price(), data.stock());
+		
+		ProductResource.create(ko.toJS(data)).done(function(response) {
+			catalog.push(newProduct);
+			newProduct(Product('', '', '', ''));
+			$('#addToCatalogModal').modal('hide');
+		});
 	};
 	var showOrder = function() {
 		visibleCatalog(false);
@@ -103,12 +107,17 @@ var vm = (function() {
 	var hideDebug = function() {
 		debug(false);	
 	};
+	var showDescription = function(data) {
+		ProductResource.get(data.id()).done(function(response) {
+			alert(response.data.description);
+		});	
+	};
 	var allCallbackSuccess = function(response) {
 		catalog([]);
 		response.data.forEach(function(item) {
 			catalog.push(Product(item.id, item.name, item.price, item.stock));
 		});
-		filteredCatalog(catalog());
+		filterCatalog(catalog());
 		ko.applyBindings(vm);
 	};
 	var activate = function() {
@@ -116,9 +125,11 @@ var vm = (function() {
 	};
 	
  	return {
+		loading: loading,
 		debug: debug,
 		searchTerm: searchTerm,
 		catalog: filteredCatalog,
+		filterCatalog: filterCatalog,
 		cart: cart,
 		cartHasProducts: cartHasProducts,
 		showSearchBar: showSearchBar,
@@ -135,6 +146,7 @@ var vm = (function() {
 		visibleCart: visibleCart,
 		showDebug: showDebug,
 		hideDebug: hideDebug,
+		showDescription: showDescription,
 		activate: activate
 	};
 })();
