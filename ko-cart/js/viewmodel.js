@@ -13,6 +13,7 @@ var vm = (function() {
 	var visibleCatalog = ko.observable(true);
 	var visibleCart = ko.observable(false);
 	var showSearchBar = ko.observable(true);
+	var selectedProduct = ko.observable();
 	
 	var filterCatalog = function() {
 		if (!catalog()) {
@@ -57,13 +58,25 @@ var vm = (function() {
 	var newProduct = ko.observable(Product('', '', '', ''));
 	var addProduct = function(data) {
 		var id = new Date().valueOf();
-		var product = Product(id, data.name(), data.price(), data.stock());
+		var product = new Product(id, data.name(), data.price(), data.stock());
 		
 		ProductResource.create(ko.toJS(data)).done(function(response) {
-			catalog.push(newProduct);
-			newProduct(Product('', '', '', ''));
+			catalog.push(product);
+			filteredCatalog(catalog());
+			newProduct(Product(new Date().valueOf(), '', 0, 0));
 			$('#addToCatalogModal').modal('hide');
 		});
+	};
+	var deleteProduct = function(product) {
+		var tmpCart = cart();
+		var i = tmpCart.length;
+		var item;
+		while (i--) {
+			if (tmpCart[i].product.id() === product.id()) {
+				item = tmpCart[i];
+			}
+		}
+		removeFromCart(item);	
 	};
 	var showOrder = function() {
 		visibleCatalog(false);
@@ -94,7 +107,29 @@ var vm = (function() {
 		var stock = data.product.stock();
 		data.product.stock(units+stock);
 		cart.remove(data);
-	};	
+	};
+	var openEditModal = function(product) {
+		var tmpProduct = ProductService.clone(product);
+		selectedProduct(product);
+		$('#editProductModal').modal('show');
+	};
+	var cancelEdition = function(product) {
+		$('#editProductModal').modal('hide');	
+	};
+	var saveProduct = function(product) {
+		ProductResource.save(ko.toJS(product)).done(function(response) {
+			var tmpCatalog = catalog();
+			var i = tmpCatalog.length;
+			while (i--) {
+				if (tmpCatalog[i].id() === product.id()) {
+					ProductService.refresh(tmpCatalog[i], product);
+				}
+			}
+			catalog(tmpCatalog);
+			filterCatalog();
+			$('#editProductModal').modal('hide');
+		});
+	};
 	var finishOrder = function() {
 		cart([]);
 		visibleCart(false);
@@ -137,16 +172,20 @@ var vm = (function() {
 		grandTotal: grandTotal,		
 		newProduct: newProduct,
 		addProduct: addProduct,
+		deleteProduct: deleteProduct,
 		addToCart: addToCart,
 		removeFromCart: removeFromCart,
 		showOrder: showOrder,
 		showCatalog: showCatalog,
+		cancelEdition: cancelEdition,
+		saveProduct: saveProduct,
 		finishOrder: finishOrder,
 		visibleCatalog: visibleCatalog,
 		visibleCart: visibleCart,
 		showDebug: showDebug,
 		hideDebug: hideDebug,
 		showDescription: showDescription,
+		openEditModal: openEditModal,
 		activate: activate
 	};
 })();

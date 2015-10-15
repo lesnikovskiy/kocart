@@ -9,7 +9,7 @@ $.mockjax({
 	url: "/products",
 	type: "GET",
 	dataType: "json",
-	responseTime: 3000,
+	responseTime: 750,
 	status: 200,
 	responseText: $.mockJSON.generateFromTemplate({
 		'data|5-5': [{
@@ -48,4 +48,30 @@ $.mockjax({
 			text: 'Product created'
 		}
 	}
-})
+});
+
+$.mockjax({
+	url: /^\/products\/([\d]+)$/,
+	type: 'PUT',
+	dataType: 'json',
+	responseTime: 750,
+	status: 200,
+	responseText: {
+		'data': {
+			text: 'Product saved'
+		}
+	}
+});
+
+$.mockjax({
+	url: /^\/products\/([\d]+)$/,
+	type: 'DELETE',
+	dataType: 'json',
+	responseTime: 750,
+	status: 200,
+	responseText: {
+		'data': {
+			text: 'Product deleted'
+		}
+	}
+});
